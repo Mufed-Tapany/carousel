@@ -1,0 +1,77 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+main {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel {
+    height: 600px;
+    width: 100%;
+}
+
+.kitty {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition-property: transform;
+    transform: translateX(100%);
+}
+
+.kitty.onscreen {
+    transform: translateX(0);
+}
+
+.kitty.exit {
+    transform: translateX(-100%);
+}
+
+.kitty.onscreen,
+.kitty.exit {
+    /* give the transition JUST to the animated statuses, not to the default .kitty */
+    transition-duration: 1s;
+}
+
+.kitty:nth-child(1) {
+    background-image: url("./assets/kit1.jpg");
+}
+.kitty:nth-child(2) {
+    background-image: url("./assets/kit2.jpg");
+}
+.kitty:nth-child(3) {
+    background-image: url("./assets/kit3.jpg");
+}
+.kitty:nth-child(4) {
+    background-image: url("./assets/kit4.jpg");
+}
+
+.dots {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    bottom: 8px;
+    list-style: none;
+}
+
+.dots li {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 50%;
+    background-color: white;
+    margin: 0 8px;
+}
+
+.dots li.highlight {
+    background-color: darkcyan;
+}
