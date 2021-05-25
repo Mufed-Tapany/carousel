@@ -49,54 +49,53 @@
         });
     }
 
-    // adding click eventListener for each dot
-    for (var i = 0; i < dots.length; i++) {
-        // using IIFE to be sure that we get the index of the dot we are clickng, as long as we use var keyword to declare the i variable.
+    // loop over the dots
+    for (let i = 0; i < dots.length; i++) {
+        // adding click eventListener for each dot
+        dots[i].addEventListener("click", function (event) {
+            // if the user clicks a dot for a picture that it's alredy on the screen ... do nothing
+            if (event.target.classList.contains("highlight")) {
+                return;
+            }
+            // if the user click a dot while an animation is happening ... do nothing
+            if (animating) {
+                return;
+            }
+            // stop the setTimeOut
+            clearTimeout(timer);
+            // add highlight class to the clicked dot
+            // and set the next kitty index to the current dot index
+            event.target.classList.toggle("highlight", (kittiesNext = i));
+            // check the next kitty index in the console
+            console.log(kittiesNext);
+            // then call the moveKitties nd updateDots functions again
+            moveKitties();
+            updateDots();
+        });
+    }
+
+    // another way to do it is using IIFFE instead of let keyword... Like the following
+
+    /* for (let i = 0; i < dots.length; i++) {
         (function (indx) {
             dots[i].addEventListener("click", function (event) {
-                // if the user clicks a dot for a picture that it's alredy on the screen ... do nothing
                 if (event.target.classList.contains("highlight")) {
                     return;
                 }
-                // if the user click a dot while an animation is happening ... do nothing
                 if (animating) {
                     return;
                 }
-                // stop the setTimeOut
                 clearTimeout(timer);
-                // add highlight class to the clicked dot
-                // and set the next kitty index to the current dot index
                 event.target.classList.toggle(
                     "highlight",
                     (kittiesNext = indx)
                 );
-                // check the next kitty index.. to be sure that the IIFE works
                 console.log(kittiesNext);
-                // then call the moveKitties nd updateDots functions again
                 moveKitties();
                 updateDots();
             });
         })(i);
-    }
-
-    // Another way to do that is using let keyword instead of var keyword (ES6) and there will be no need for IIFE ... like the following:
-
-    /* for (let i = 0; i < dots.length; i++) {
-            dots[i].addEventListener("click", function (event) {
-                if (event.target.classList.contains("highlight")) {
-                    return;
-                }
-                if (animating) {
-                    return;
-                }
-                clearTimeout(timer);
-                event.target.classList.toggle("highlight", (kittiesNext = i));
-                console.log(kittiesNext);
-                clearTimeout(timer);
-                moveKitties();
-                updateDots();
-            });
-        } */
+    } */
 
     //save the setTimeout in a variable, because we will need to clearTimeout later
     timer = setTimeout(function () {
