@@ -1,16 +1,15 @@
 (function () {
-    console.log("Kitty carousel!");
-    var carousel = document.getElementById("carousel");
+    const carousel = document.getElementById("carousel");
     // query kitties FROM the carousel (maybe multiple carousels in the future)
-    var kitties = carousel.querySelectorAll(".kitty");
-    var dots = carousel.querySelectorAll(".dot");
-    var delay = 5000;
-    var kittiesIndex = 0;
-    var kittiesNext = 1;
+    const kitties = carousel.querySelectorAll(".kitty");
+    const dots = carousel.querySelectorAll(".dot");
+    let delay = 1000;
+    let kittiesIndex = 0;
+    let kittiesNext = 1;
     var timer; // to save setTimeout inside of it
-    var animating; // to set the current animation status .. true or false
+    let animating; // to set the current animation status .. true or false
 
-    function moveKitties() {
+    const moveKitties = () => {
         // set the animation to true
         animating = true;
         // remove onscreen class from the kitties[0] and add exit class to it
@@ -26,10 +25,10 @@
         } else {
             kittiesNext++;
         }
-    }
+    };
 
     // adding transition eventListener
-    carousel.addEventListener("transitionend", function (event) {
+    carousel.addEventListener("transitionend", (event) => {
         if (!event.target.classList.contains("exit")) {
             return;
         }
@@ -43,16 +42,16 @@
     });
 
     // adding highlight for each dot
-    function updateDots() {
-        dots.forEach(function (dot, index) {
+    const updateDots = () => {
+        dots.forEach((dot, index) => {
             dot.classList.toggle("highlight", kittiesIndex === index);
         });
-    }
+    };
 
     // loop over the dots
     for (let i = 0; i < dots.length; i++) {
         // adding click eventListener for each dot
-        dots[i].addEventListener("click", function (event) {
+        dots[i].addEventListener("click", (event) => {
             // if the user clicks a dot for a picture that it's alredy on the screen ... do nothing
             if (event.target.classList.contains("highlight")) {
                 return;
@@ -74,9 +73,9 @@
         });
     }
 
-    // another way to do it is using IIFFE instead of let keyword... Like the following
+    // another way to do it is using IIFFE instead of let keyword (without ES6)... Like the following
 
-    /* for (let i = 0; i < dots.length; i++) {
+    /* for (var i = 0; i < dots.length; i++) {
         (function (indx) {
             dots[i].addEventListener("click", function (event) {
                 if (event.target.classList.contains("highlight")) {
