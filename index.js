@@ -67,7 +67,7 @@
             event.target.classList.toggle("highlight", (kittiesNext = i));
             // check the next kitty index in the console
             console.log(kittiesNext);
-            // then call the moveKitties nd updateDots functions again
+            // then call the moveKitties and updateDots functions again
             moveKitties();
             updateDots();
         });
