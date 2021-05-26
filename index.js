@@ -74,17 +74,20 @@
         updateDots();
     };
 
+    const getDotsHandler = (event, index) => {
+        dotsHandler(event, index);
+        event.stopPropagation();
+    };
+
     // loop over the dots
-    const clickTouchdotsHandler = () => {
+    const clickTouchDotsHandler = () => {
         for (let i = 0; i < dots.length; i++) {
             // adding click eventListener for each dot
             dots[i].addEventListener("click", (event) => {
-                dotsHandler(event, i);
-                event.stopPropagation();
+                getDotsHandler(event, i);
             });
             dots[i].addEventListener("touchstart", (event) => {
-                dotsHandler(event, i);
-                event.stopPropagation();
+                getDotsHandler(event, i);
             });
         }
     };
@@ -101,6 +104,9 @@
         distanceSwipped = swippingX.startX - swippingX.endX;
         if (distanceSwipped > distanceToSwipe) {
             clearTimeout(timer);
+            if (animating) {
+                return;
+            }
             moveKitties();
             updateDots();
         }
@@ -110,7 +116,7 @@
     carousel.addEventListener("touchmove", touchMove, false);
     carousel.addEventListener("touchend", touchEnd, false);
 
-    clickTouchdotsHandler();
+    clickTouchDotsHandler();
 
     //save the setTimeout in a variable, because we will need to clearTimeout later
     timer = setTimeout(function () {
