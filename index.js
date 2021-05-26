@@ -3,11 +3,16 @@
     // query kitties FROM the carousel (maybe multiple carousels in the future)
     const kitties = carousel.querySelectorAll(".kitty");
     const dots = carousel.querySelectorAll(".dot");
-    let delay = 1000;
+    let delay = 5000;
     let kittiesIndex = 0;
     let kittiesNext = 1;
     var timer; // to save setTimeout inside of it
     let animating; // to set the current animation status .. true or false
+    let distanceToSwipe = 200; // the minimum distance to swipe
+    var swippingX = {
+        startX: null,
+        endX: null,
+    };
 
     const moveKitties = () => {
         // set the animation to true
@@ -48,53 +53,64 @@
         });
     };
 
+    const dotsHandler = (event, index) => {
+        // if the user clicks a dot for a picture that it's alredy on the screen ... do nothing
+        if (event.target.classList.contains("highlight")) {
+            return;
+        }
+        // if the user click a dot while an animation is happening ... do nothing
+        if (animating) {
+            return;
+        }
+        // stop the setTimeOut
+        clearTimeout(timer);
+        // add highlight class to the clicked dot
+        // and set the next kitty index to the current dot index
+        event.target.classList.toggle("highlight", (kittiesNext = index));
+        // check the next kitty index in the console
+        console.log(kittiesNext);
+        // then call the moveKitties and updateDots functions again
+        moveKitties();
+        updateDots();
+    };
+
     // loop over the dots
-    for (let i = 0; i < dots.length; i++) {
-        // adding click eventListener for each dot
-        dots[i].addEventListener("click", (event) => {
-            // if the user clicks a dot for a picture that it's alredy on the screen ... do nothing
-            if (event.target.classList.contains("highlight")) {
-                return;
-            }
-            // if the user click a dot while an animation is happening ... do nothing
-            if (animating) {
-                return;
-            }
-            // stop the setTimeOut
+    const clickTouchdotsHandler = () => {
+        for (let i = 0; i < dots.length; i++) {
+            // adding click eventListener for each dot
+            dots[i].addEventListener("click", (event) => {
+                dotsHandler(event, i);
+                event.stopPropagation();
+            });
+            dots[i].addEventListener("touchstart", (event) => {
+                dotsHandler(event, i);
+                event.stopPropagation();
+            });
+        }
+    };
+
+    const touchStart = (event) => {
+        swippingX.startX = event.touches[0].pageX;
+    };
+
+    const touchMove = (event) => {
+        swippingX.endX = event.touches[0].pageX;
+    };
+
+    const touchEnd = () => {
+        distanceSwipped = swippingX.startX - swippingX.endX;
+        if (distanceSwipped > distanceToSwipe) {
             clearTimeout(timer);
-            // add highlight class to the clicked dot
-            // and set the next kitty index to the current dot index
-            event.target.classList.toggle("highlight", (kittiesNext = i));
-            // check the next kitty index in the console
-            console.log(kittiesNext);
-            // then call the moveKitties and updateDots functions again
             moveKitties();
             updateDots();
-        });
-    }
+        }
+    };
 
-    // another way to do it is using IIFFE instead of let keyword (without ES6)... Like the following
+    carousel.addEventListener("touchstart", touchStart, false);
+    carousel.addEventListener("touchmove", touchMove, false);
+    carousel.addEventListener("touchend", touchEnd, false);
 
-    /* for (var i = 0; i < dots.length; i++) {
-        (function (indx) {
-            dots[i].addEventListener("click", function (event) {
-                if (event.target.classList.contains("highlight")) {
-                    return;
-                }
-                if (animating) {
-                    return;
-                }
-                clearTimeout(timer);
-                event.target.classList.toggle(
-                    "highlight",
-                    (kittiesNext = indx)
-                );
-                console.log(kittiesNext);
-                moveKitties();
-                updateDots();
-            });
-        })(i);
-    } */
+    clickTouchdotsHandler();
 
     //save the setTimeout in a variable, because we will need to clearTimeout later
     timer = setTimeout(function () {
